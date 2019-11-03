@@ -1,0 +1,25 @@
+#!/bin/bash
+
+GIT_MESSAGE=`git log --format=%B -n 1`
+#echo "$GIT_MESSAGE"
+JIRA_ID_COMMIT=`echo $GIT_MESSAGE | cut -c-4`
+echo "$JIRA_ID_COMMIT"
+
+JIRA_URL="https://karanchauhan.atlassian.net/browse/RD-1"
+
+if [ $(curl -LI "$JIRA_URL" -u 'karan.chauhan023@gmail.com::M6BJh3JbZE6fCQ3N2D2AA402' -o /dev/null -w '%{http_code}\n' -s) == "200" ];
+then
+echo "JIRA ticket $JIRA_URL is valid";
+else
+echo "JIRA ticket is Invalid. Check again";
+fi
+
+JIRA_ID=`echo $JIRA_URL | grep -o '....$'`
+echo "$JIRA_ID"
+
+if [ "$JIRA_ID" == "$JIRA_ID_COMMIT" ]; then
+        echo "JIRA ticket is Valid"
+        curl -u karan:115fd5240a23ed08ff5771a982743d2a65 http://192.168.2.130:8080/job/RBS_DEMO_JENKINS_JOB/build?token=wefiytgwiefiweihfqweiodf
+else
+        echo "JIRA ticket doesnt exist"
+fi
